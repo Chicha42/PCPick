@@ -4,7 +4,7 @@ from django.db import models
 class CPU(models.Model):
     name = models.CharField(max_length=128)
     socket = models.CharField(max_length=128)
-    benchmark_score = models.PositiveIntegerField()
+    benchmark_score = models.PositiveIntegerField(default=0)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     url = models.URLField()
 
@@ -18,7 +18,7 @@ class CPU(models.Model):
 class GPU(models.Model):
     name = models.CharField(max_length=128)
     pcie_version = models.FloatField()
-    benchmark_score = models.PositiveIntegerField()
+    benchmark_score = models.PositiveIntegerField(default=0)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     url = models.URLField()
 
