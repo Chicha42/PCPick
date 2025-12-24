@@ -11,6 +11,10 @@ class CPU(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name = "CPU"
+        verbose_name_plural = "CPUs"
+
 class GPU(models.Model):
     name = models.CharField(max_length=128)
     pcie_version = models.FloatField()
@@ -20,6 +24,10 @@ class GPU(models.Model):
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name = "GPU"
+        verbose_name_plural = "GPUs"
 
 class RAM(models.Model):
     name = models.CharField(max_length=128)
@@ -31,6 +39,10 @@ class RAM(models.Model):
 
     def __str__(self):
         return self.name
+
+    class Meta:
+        verbose_name = "RAM"
+        verbose_name_plural = "RAM"
 
 class Motherboard(models.Model):
     name = models.CharField(max_length=128)
@@ -44,6 +56,10 @@ class Motherboard(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        verbose_name = "Motherboard"
+        verbose_name_plural = "Motherboards"
+
 class PriceHistory(models.Model):
     component_id = models.PositiveIntegerField()
     component_type = models.CharField(max_length=128)
@@ -52,3 +68,7 @@ class PriceHistory(models.Model):
 
     def __str__(self):
         return f"{self.component_type} ({self.component_id}) - {self.price}"
+
+    class Meta:
+        verbose_name = "Price History"
+        verbose_name_plural = "Price History"
