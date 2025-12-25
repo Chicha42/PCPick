@@ -14,6 +14,22 @@ class Command(BaseCommand):
         soup = BeautifulSoup(response.text, 'html.parser')
         return soup.find_all('div', class_='Card_wrap__hES44 Card_listing__nGjbk ListingRenderer_listingCard__DqY3k')
 
+    def get_tbody(self, url):
+        """Вспомогательный метод для получения тела таблицы"""
+        response = requests.get(url, headers=self.headers)
+        soup = BeautifulSoup(response.text, 'html.parser')
+        return soup.find_all('tr')
+
+    def get_benchmark_score(self, tbody, name):
+        """Вспомогательный метод для получения бенчмарка из videocardbenchmark.net и cpubenchmark.net"""
+        benchmark_score = 0
+        for row in tbody:
+            row_name = row.find('a').text if row.find('a') is not None else ''
+            if row_name.lower() == name.lower():
+                benchmark_score = int(row.find_all('td')[1].text.replace(',', ''))
+                break
+        return benchmark_score
+
     def handle(self, *args, **options):
         self.parse_cpus()
         self.parse_gpus()
@@ -23,15 +39,17 @@ class Command(BaseCommand):
     def parse_cpus(self):
         url = 'https://www.regard.ru/catalog/1001/processory'
         items = self.get_items(url)
+        cpus_tbody = self.get_tbody('https://www.cpubenchmark.net/cpu_list.php')
 
         for item in items:
             url_name = item.find('a', class_='CardText_link__C_fPZ')
-            name = ' '.join(url_name.text.split()[1:-1])
+            name = ' '.join(url_name.text.split()[1:-1]).replace(' - ', '-')
             url = self.base_url + url_name.attrs['href']
             socket = item.find('p', class_='CardText_text__fZPl_').text.split(',')[0]
             price = item.find('span', class_='Price_price__m2aSe').text.split()[:-1]
             price = float(''.join(price))
-            cpu_obj, created = CPU.objects.update_or_create(url=url, defaults={'socket': socket, 'price': price, 'name': name})
+            benchmark_score = self.get_benchmark_score(cpus_tbody, name)
+            cpu_obj, created = CPU.objects.update_or_create(url=url, defaults={'socket': socket, 'benchmark_score': benchmark_score, 'price': price, 'name': name})
             PriceHistory.objects.create(component_id=cpu_obj.id, component_type='cpu', price=price)
 
     def parse_gpus(self):
@@ -39,6 +57,7 @@ class Command(BaseCommand):
         items = self.get_items(url)
         manufacturers = ["Acer", "AFOX", "ASRock", "ASUS", "Biostar", "CBR", "Gigabyte", "HP", "INNO3D", "Maxsun", "MSI", "Palit", "PNY", "Sapphire", "Zotac"]
         pcie_versions = ['5.0', '4.0']
+        gpus_tbody = self.get_tbody('https://www.videocardbenchmark.net/gpu_list.php')
 
         for item in items:
             url_name = item.find('a', class_='CardText_link__C_fPZ')
@@ -60,7 +79,8 @@ class Command(BaseCommand):
 
             price = item.find('span', class_='Price_price__m2aSe').text.split()[:-1]
             price = float(''.join(price))
-            gpu_obj, created = GPU.objects.update_or_create(url=url, defaults={'pcie_version': pcie_version,'price':price ,'name': name})
+            benchmark_score = self.get_benchmark_score(gpus_tbody, name)
+            gpu_obj, created = GPU.objects.update_or_create(url=url, defaults={'pcie_version': pcie_version, 'benchmark_score': benchmark_score,'price':price ,'name': name})
             PriceHistory.objects.create(component_id=gpu_obj.id, component_type='gpu', price=price)
 
     def parse_ram(self):
