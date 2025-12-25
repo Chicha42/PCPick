@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+    <form method="POST">
+        {% csrf_token %}
+
+        <div>
+            <input type="text" name="budget" placeholder="Введите бюджет">
+            <button type="submit">Собрать</button>
+        </div>
+    </form>
+    {% if build %}
+    <div class="result">
+        <h3>Ваша сборка:</h3>
+        <p>Процессор: {{ build.cpu.name }} ({{ build.cpu.price }} руб.)</p>
+        <p>Видеокарта: {{ build.gpu.name }} ({{ build.gpu.price }} руб.)</p>
+        <p>Материнка: {{ build.motherboard.name }} (Сокет: {{ build.motherboard.socket }}) ({{ build.motherboard.price }} руб.)</p>
+        <p>Память: {{ build.ram.name }} ({{ build.ram.ram_type }} {{ build.ram.ram_capacity }} GB) ({{ build.ram.price }} руб.)</p>
+        <hr>
+        <h4>Итоговая стоимость: {{ build.total_price }} руб.</h4>
+    </div>
+    {% endif %}
+</body>
+</html>
