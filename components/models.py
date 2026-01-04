@@ -7,6 +7,7 @@ class CPU(models.Model):
     benchmark_score = models.PositiveIntegerField(default=0)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     url = models.URLField()
+    image_url = models.URLField(null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -21,6 +22,7 @@ class GPU(models.Model):
     benchmark_score = models.PositiveIntegerField(default=0)
     price = models.DecimalField(max_digits=10, decimal_places=2)
     url = models.URLField()
+    image_url = models.URLField(null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -36,6 +38,7 @@ class RAM(models.Model):
     ram_bar_count = models.PositiveIntegerField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
     url = models.URLField()
+    image_url = models.URLField(null=True, blank=True)
 
     def __str__(self):
         return self.name
@@ -52,6 +55,7 @@ class Motherboard(models.Model):
     ram_slots = models.PositiveIntegerField()
     price = models.DecimalField(max_digits=10, decimal_places=2)
     url = models.URLField()
+    image_url = models.URLField(null=True, blank=True)
 
     def __str__(self):
         return self.name
