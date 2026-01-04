@@ -1,28 +1,73 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <title>PCPick - Тест подбора</title>
 </head>
 <body>
+
+    <h1>Подбор конфигурации ПК</h1>
+
     <form method="POST">
         {% csrf_token %}
-
-        <div>
-            <input type="text" name="budget" placeholder="Введите бюджет">
-            <button type="submit">Собрать</button>
-        </div>
+        <label>Ваш бюджет (руб):</label>
+        <input type="number" name="budget" value="{{ request.POST.budget }}" required>
+        <button type="submit">Собрать</button>
     </form>
+
+    {% if error %}
+        <p class="error">{{ error }}</p>
+    {% endif %}
+
     {% if build %}
-    <div class="result">
-        <h3>Ваша сборка:</h3>
-        <p>Процессор: {{ build.cpu.name }} ({{ build.cpu.price }} руб.)</p>
-        <p>Видеокарта: {{ build.gpu.name }} ({{ build.gpu.price }} руб.)</p>
-        <p>Материнка: {{ build.motherboard.name }} (Сокет: {{ build.motherboard.socket }}) ({{ build.motherboard.price }} руб.)</p>
-        <p>Память: {{ build.ram.name }} ({{ build.ram.ram_type }} {{ build.ram.ram_capacity }} GB) ({{ build.ram.price }} руб.)</p>
         <hr>
-        <h4>Итоговая стоимость: {{ build.total_price }} руб.</h4>
-    </div>
+        <div>
+            <h2>Результат сборки:</h2>
+            <p>Бюджет пользователя: <b>{{ total_budget }} руб.</b></p>
+            <p>Затрачено на 4 компонента: <b>{{ build.total_price }} руб.</b></p>
+            <p>Остаток на БП, Корпус и SSD: <b>{{ remaining }} руб.</b></p>
+        </div>
+        <hr>
+        <div>
+            <div>
+                <img src="{{ build.cpu.image_url }}" alt="CPU">
+                <h3>Процессор</h3>
+                <p><b>{{ build.cpu.name }}</b></p>
+                <p>Сокет: {{ build.cpu.socket }}</p>
+                <p>Производительность: {{ build.cpu.benchmark_score }}</p>
+                <p>Цена: {{ build.cpu.price }} руб.</p>
+            </div>
+            <hr>
+            <div>
+                <img src="{{ build.gpu.image_url }}" alt="GPU">
+                <h3>Видеокарта</h3>
+                <p><b>{{ build.gpu.name }}</b></p>
+                <p>PCI-E: {{ build.gpu.pcie_version }}</p>
+                <p>Производительность: {{ build.gpu.benchmark_score }}</p>
+                <p>Цена: {{ build.gpu.price }} руб.</p>
+            </div>
+            <hr>
+            <div>
+                <img src="{{ build.mb.image_url }}" alt="MB">
+                <h3>Материнская плата</h3>
+                <p><b>{{ build.mb.name }}</b></p>
+                <p>Сокет: {{ build.mb.socket }}</p>
+                <p>Тип памяти: {{ build.mb.ram_type }}</p>
+                <p>Слотов RAM: {{ build.mb.ram_slots }}</p>
+                <p>Поддержка PCI-E: {{ build.mb.pcie_version }}</p>
+                <p>Цена: {{ build.mb.price }} руб.</p>
+            </div>
+            <hr>
+            <div>
+                <img src="{{ build.ram.image_url }}" alt="RAM">
+                <h3>Оперативная память</h3>
+                <p><b>{{ build.ram.name }}</b></p>
+                <p>Тип: {{ build.ram.ram_type }}</p>
+                <p>Объем: {{ build.ram.ram_capacity }} ГБ</p>
+                <p>Плашек: {{ build.ram.ram_bar_count }} шт.</p>
+                <p>Цена: {{ build.ram.price }} руб.</p>
+            </div>
+        </div>
     {% endif %}
 </body>
 </html>

@@ -2,6 +2,9 @@ from django.shortcuts import render
 from components.models import CPU, GPU, RAM, Motherboard
 from decimal import Decimal
 
+from configurator.models import Build
+
+
 def index(request):
     context = {}
     if request.method == "POST":
@@ -36,13 +39,12 @@ def index(request):
                     ).order_by('-ram_capacity', '-price').first()
 
                     if ram:
-                        context['build'] = {
-                            'cpu': cpu,
-                            'gpu': gpu,
-                            'motherboard': mb,
-                            'ram': ram,
-                            'total_price': cpu.price + gpu.price + mb.price + ram.price
-                        }
+                        total_price = cpu.price + gpu.price + mb.price + ram.price
+                        build_user = request.user if request.user.is_authenticated else None
+                        new_build = Build.objects.create(user=build_user, cpu=cpu, gpu=gpu, mb=mb, ram=ram, total_price=total_price)
+                        context['build'] = new_build
+                        context['total_budget'] = total_budget
+                        context['remaining'] = total_budget - total_price
                         break
                 else:
                     context['error'] = 'Не удалось подобрать подходящую оперативную память.'
