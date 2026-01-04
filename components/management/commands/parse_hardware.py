@@ -105,7 +105,7 @@ class Command(BaseCommand):
 
     def parse_gpus(self):
         manufacturers = ["Acer", "AFOX", "ASRock", "ASUS", "Biostar", "CBR", "Gigabyte", "HP", "INNO3D", "Maxsun", "MSI", "Palit", "PNY", "Sapphire", "Zotac"]
-        pcie_versions = ['5.0', '4.0']
+        pcie_versions = ['5.0', '4.0', '3.0']
         gb_counts = ['32Gb', '24Gb', '20Gb', '16Gb', '12Gb', '10Gb', '8Gb', '6Gb', '4Gb', '2Gb', '1Gb', '512Mb']
         gpus_tbody = self.get_tbody('https://www.videocardbenchmark.net/gpu_list.php')
         bench_dict = self.create_bench_dict(gpus_tbody)
@@ -189,7 +189,7 @@ class Command(BaseCommand):
     def parse_motherboards(self):
         sockets = ["AM4", "AM5", "LGA 1200", "LGA 1700", "LGA 1851", "LGA 775"]
         ram_types = ['DDR5', 'DDR4', 'DDR3', 'DDR2']
-        pcie_versions = ['5.0', '4.0']
+        pcie_versions = ['5.0', '4.0', '3.0']
         ram_slots_versions = ['4xDDR', '2xDDR']
 
         for page in range(1,6):
