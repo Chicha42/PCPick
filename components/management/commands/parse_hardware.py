@@ -98,7 +98,8 @@ class Command(BaseCommand):
                 price = item.find('span', class_='Price_price__m2aSe').text.split()[:-1]
                 price = float(''.join(price))
                 benchmark_score = self.get_benchmark_score(bench_dict, name)
-                cpu_obj, created = CPU.objects.update_or_create(url=url, defaults={'socket': socket, 'benchmark_score': benchmark_score, 'price': price, 'name': name})
+                image_url = self.base_url + item.find('img').attrs['src']
+                cpu_obj, created = CPU.objects.update_or_create(url=url, defaults={'socket': socket, 'benchmark_score': benchmark_score, 'price': price, 'name': name, 'image_url': image_url})
                 PriceHistory.objects.create(component_id=cpu_obj.id, component_type='cpu', price=price)
             time.sleep(1.5)
 
@@ -141,7 +142,8 @@ class Command(BaseCommand):
                 price = item.find('span', class_='Price_price__m2aSe').text.split()[:-1]
                 price = float(''.join(price))
                 benchmark_score = self.get_benchmark_score(bench_dict, name)
-                gpu_obj, created = GPU.objects.update_or_create(url=url, defaults={'pcie_version': pcie_version, 'benchmark_score': benchmark_score,'price':price ,'name': name})
+                image_url = self.base_url + item.find('img').attrs['src']
+                gpu_obj, created = GPU.objects.update_or_create(url=url, defaults={'pcie_version': pcie_version, 'benchmark_score': benchmark_score,'price':price ,'name': name, 'image_url': image_url})
                 PriceHistory.objects.create(component_id=gpu_obj.id, component_type='gpu', price=price)
             time.sleep(1.5)
 
@@ -179,7 +181,8 @@ class Command(BaseCommand):
 
                 price = item.find('span', class_='Price_price__m2aSe').text.split()[:-1]
                 price = float(''.join(price))
-                ram_obj, created = RAM.objects.update_or_create(url=url, defaults={'ram_type': ram_type, 'ram_capacity': ram_capacity, 'ram_bar_count': ram_bar_count,'price': price ,'name': name})
+                image_url = self.base_url + item.find('img').attrs['src']
+                ram_obj, created = RAM.objects.update_or_create(url=url, defaults={'ram_type': ram_type, 'ram_capacity': ram_capacity, 'ram_bar_count': ram_bar_count,'price': price ,'name': name, 'image_url': image_url})
                 PriceHistory.objects.create(component_id=ram_obj.id, component_type='ram', price=price)
             time.sleep(1.5)
 
@@ -230,6 +233,7 @@ class Command(BaseCommand):
 
                 price = item.find('span', class_='Price_price__m2aSe').text.split()[:-1]
                 price = float(''.join(price))
-                mb_obj, created = Motherboard.objects.update_or_create(url=url, defaults={'socket': socket, 'ram_type': ram_type, 'pcie_version':pcie_version, 'ram_slots':ram_slots, 'price': price, 'name': name})
+                image_url = self.base_url + item.find('img').attrs['src']
+                mb_obj, created = Motherboard.objects.update_or_create(url=url, defaults={'socket': socket, 'ram_type': ram_type, 'pcie_version':pcie_version, 'ram_slots':ram_slots, 'price': price, 'name': name, 'image_url': image_url})
                 PriceHistory.objects.create(component_id=mb_obj.id, component_type='mb', price=price)
             time.sleep(1.5)
