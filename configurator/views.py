@@ -1,7 +1,8 @@
 from django.shortcuts import render
 from components.models import CPU, GPU, RAM, Motherboard
 from decimal import Decimal
-
+from components.models import PriceHistory
+from .utils import get_graph
 from configurator.models import Build
 
 
@@ -45,6 +46,12 @@ def index(request):
                         context['build'] = new_build
                         context['total_budget'] = total_budget
                         context['remaining'] = total_budget - total_price
+
+                        cpu_history = PriceHistory.objects.filter(component_id=cpu.id, component_type='cpu').order_by('date_checked')
+                        dates = [h.date_checked.strftime("%d.%m") for h in cpu_history]
+                        prices = [float(h.price) for h in cpu_history]
+                        if len(prices) > 1:
+                            context['cpu_chart'] = get_graph(dates, prices)
                         break
                 else:
                     context['error'] = 'Не удалось подобрать подходящую оперативную память.'

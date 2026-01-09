@@ -31,6 +31,14 @@
         <div>
             <div>
                 <img src="{{ build.cpu.image_url }}" alt="CPU">
+                {% if cpu_chart %}
+                    <div style="margin-top: 10px;">
+                        <p><b>Динамика цены:</b></p>
+                        <img src="data:image/png;base64,{{ cpu_chart }}" style="width: 100%; max-width: 400px; height: auto; border-radius: 8px;">
+                    </div>
+                {% else %}
+                    <p>Истории цен пока недостаточно для графика</p>
+                {% endif %}
                 <h3>Процессор</h3>
                 <p><b>{{ build.cpu.name }}</b></p>
                 <p>Сокет: {{ build.cpu.socket }}</p>
