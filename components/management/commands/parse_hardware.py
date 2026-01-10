@@ -74,9 +74,9 @@ class Command(BaseCommand):
         return benchmark_score
 
     def handle(self, *args, **options):
-        self.parse_cpus()
-        self.parse_gpus()
-        self.parse_ram()
+        #self.parse_cpus()
+        #self.parse_gpus()
+        #self.parse_ram()
         self.parse_motherboards()
 
     def parse_cpus(self):
@@ -198,7 +198,7 @@ class Command(BaseCommand):
 
             for item in items:
                 url_name = item.find('a', class_='CardText_link__C_fPZ')
-                name = ' '.join(url_name.text.split()[2:-1])
+                name = ' '.join(url_name.text.split()[2:])
 
                 if not self.is_valid(name):
                     continue
