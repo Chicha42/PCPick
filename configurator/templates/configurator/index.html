@@ -32,9 +32,11 @@
             <div>
                 <img src="{{ build.cpu.image_url }}" alt="CPU">
                 {% if cpu_chart %}
-                    <div style="margin-top: 10px;">
+                    <div>
                         <p><b>Динамика цены:</b></p>
-                        <img src="data:image/png;base64,{{ cpu_chart }}" style="width: 100%; max-width: 400px; height: auto; border-radius: 8px;">
+                        <div style="width: 100%; max-width: 350px; border-radius: 8px; overflow: hidden; background: #121212; padding: 10px;">
+                            {{ cpu_chart|safe }}
+                        </div>
                     </div>
                 {% else %}
                     <p>Истории цен пока недостаточно для графика</p>
@@ -48,6 +50,16 @@
             <hr>
             <div>
                 <img src="{{ build.gpu.image_url }}" alt="GPU">
+                {% if gpu_chart %}
+                    <div>
+                        <p><b>Динамика цены:</b></p>
+                        <div style="width: 100%; max-width: 350px; border-radius: 8px; overflow: hidden; background: #121212; padding: 10px;">
+                            {{ gpu_chart|safe }}
+                        </div>
+                    </div>
+                {% else %}
+                    <p>Истории цен пока недостаточно для графика</p>
+                {% endif %}
                 <h3>Видеокарта</h3>
                 <p><b>{{ build.gpu.name }}</b></p>
                 <p>PCI-E: {{ build.gpu.pcie_version }}</p>
@@ -57,6 +69,16 @@
             <hr>
             <div>
                 <img src="{{ build.mb.image_url }}" alt="MB">
+                {% if mb_chart %}
+                    <div>
+                        <p><b>Динамика цены:</b></p>
+                        <div style="width: 100%; max-width: 350px; border-radius: 8px; overflow: hidden; background: #121212; padding: 10px;">
+                            {{ mb_chart|safe }}
+                        </div>
+                    </div>
+                {% else %}
+                    <p>Истории цен пока недостаточно для графика</p>
+                {% endif %}
                 <h3>Материнская плата</h3>
                 <p><b>{{ build.mb.name }}</b></p>
                 <p>Сокет: {{ build.mb.socket }}</p>
@@ -68,6 +90,16 @@
             <hr>
             <div>
                 <img src="{{ build.ram.image_url }}" alt="RAM">
+                {% if ram_chart %}
+                    <div>
+                        <p><b>Динамика цены:</b></p>
+                        <div style="width: 100%; max-width: 350px; border-radius: 8px; overflow: hidden; background: #121212; padding: 10px;">
+                            {{ ram_chart|safe }}
+                        </div>
+                    </div>
+                {% else %}
+                    <p>Истории цен пока недостаточно для графика</p>
+                {% endif %}
                 <h3>Оперативная память</h3>
                 <p><b>{{ build.ram.name }}</b></p>
                 <p>Тип: {{ build.ram.ram_type }}</p>

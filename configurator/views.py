@@ -1,8 +1,7 @@
 from django.shortcuts import render
 from components.models import CPU, GPU, RAM, Motherboard
 from decimal import Decimal
-from components.models import PriceHistory
-from .utils import get_graph
+from .utils import get_component_chart
 from configurator.models import Build
 
 
@@ -43,15 +42,17 @@ def index(request):
                         total_price = cpu.price + gpu.price + mb.price + ram.price
                         build_user = request.user if request.user.is_authenticated else None
                         new_build = Build.objects.create(user=build_user, cpu=cpu, gpu=gpu, mb=mb, ram=ram, total_price=total_price)
+                        components_to_chart = {
+                            'cpu_chart': get_component_chart(new_build.cpu.id, 'cpu'),
+                            'gpu_chart': get_component_chart(new_build.gpu.id, 'gpu'),
+                            'ram_chart': get_component_chart(new_build.ram.id, 'ram'),
+                            'mb_chart': get_component_chart(new_build.mb.id, 'mb')
+                        }
+                        for context_key, context_value in components_to_chart.items():
+                            context[context_key] = context_value
                         context['build'] = new_build
                         context['total_budget'] = total_budget
                         context['remaining'] = total_budget - total_price
-
-                        cpu_history = PriceHistory.objects.filter(component_id=cpu.id, component_type='cpu').order_by('date_checked')
-                        dates = [h.date_checked.strftime("%d.%m") for h in cpu_history]
-                        prices = [float(h.price) for h in cpu_history]
-                        if len(prices) > 1:
-                            context['cpu_chart'] = get_graph(dates, prices)
                         break
                 else:
                     context['error'] = 'Не удалось подобрать подходящую оперативную память.'
