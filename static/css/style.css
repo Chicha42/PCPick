@@ -1,0 +1,176 @@
+:root {
+    --dark-bg: #0b0e14;
+    --card-bg: #161b22;
+    --accent-purple: #8b5cf6;
+    --text-gray: #9ca3af;
+    --hazard-red: #ef4444
+}
+
+body {
+    background-color: var(--dark-bg);
+    color: white;
+    font-family: 'Montserrat', sans-serif;
+}
+
+.card-link {
+    text-decoration: none !important;
+    color: white !important;
+    display: block;
+    height: 100%;
+}
+
+.component-card {
+    background: var(--card-bg);
+    border: 1px solid #30363d;
+    border-radius: 16px;
+    padding: 20px;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    transition: 0.3s;
+}
+
+.component-card:hover {
+    border-color: var(--accent-purple);
+    transform: translateY(-5px);
+}
+
+.component-type-header {
+    text-transform: uppercase;
+    font-size: 0.7rem;
+    font-weight: 800;
+    letter-spacing: 1px;
+    color: var(--accent-purple);
+    margin-bottom: 12px;
+}
+
+.img-wrap {
+    background: white;
+    border-radius: 12px;
+    height: 160px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+    padding: 10px;
+}
+
+.component-name {
+    font-size: 1.2rem;
+    font-weight: 700;
+    overflow: hidden;
+}
+
+.specs-container {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    font-size: 1rem;
+    color: white;
+    margin: 15px 0;
+    line-height: 1.4;
+}
+
+.price-text {
+    font-size: 1.3rem;
+    font-weight: 800;
+    color: var(--accent-purple);
+    margin-bottom: 10px;
+}
+
+.chart-container {
+    background: #000;
+    border-radius: 8px;
+    overflow: hidden;
+}
+
+.big-input {
+    height: 50px;
+    background-color: #1a1d29 !important;
+    border: 1px solid #334155 !important;
+    color: white !important;
+    font-size: 1.2rem;
+    border-radius: 12px;
+}
+
+.btn-purple {
+    background-color: var(--accent-purple);
+    color: white !important;
+    border: none;
+    font-weight: 700;
+    border-radius: 10px;
+    padding: 10px 25px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+.btn-outline-purple {
+    background-color: transparent;
+    color: var(--accent-purple) !important;
+    outline: 3px solid var(--accent-purple);
+    outline-offset: -3px;
+    font-weight: 700;
+    border-radius: 10px;
+    padding: 10px 25px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+.btn-hazard {
+    background-color: transparent;
+    color: darkred !important;
+    outline: 3px solid darkred;
+    outline-offset: -3px;
+    font-weight: 700;
+    border-radius: 10px;
+    padding: 10px 25px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
+}
+
+.btn-hazard:hover {
+    background-color: darkred;
+    color: white !important;
+}
+
+.btn-purple:hover, .btn-outline-purple:hover{
+    background-color: white;
+    color: var(--accent-purple) !important;
+    box-shadow: 0 0 15px var(--accent-purple);
+    outline: none;
+}
+
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+input::placeholder {
+    color: white !important;
+    opacity: 0.5 !important;
+}
+
+.navbar {
+    background-color: var(--dark-bg) !important;
+    margin-bottom: 150px;
+}
+
+.nav-item {
+    font-size: 1.3rem;
+}
+
+.js-plotly-plot .plotly .cursor-crosshair {
+    cursor: default !important;
+}
