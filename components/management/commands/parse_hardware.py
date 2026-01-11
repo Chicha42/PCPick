@@ -74,9 +74,9 @@ class Command(BaseCommand):
         return benchmark_score
 
     def handle(self, *args, **options):
-        #self.parse_cpus()
-        #self.parse_gpus()
-        #self.parse_ram()
+        self.parse_cpus()
+        self.parse_gpus()
+        self.parse_ram()
         self.parse_motherboards()
 
     def parse_cpus(self):
