@@ -1,0 +1,121 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="mb-5">
+    <a href="{% url 'profile' %}" class="text-gray text-decoration-none small">← Назад к списку</a>
+    <h1 class="fw-bold mt-2">Детали сборки #{{ build_number }}</h1>
+    <p class="text-gray">Создана: {{ build.created_at|date:"d.m.Y H:i" }}</p>
+</div>
+
+<div class="row g-4">
+    <div class="col-md-6 col-lg-3">
+            <a href="{{ build.cpu.url }}" target="_blank" class="card-link">
+                <div class="component-card">
+                    <span class="component-type-header">Процессор</span>
+                    <div class="img-wrap mb-3">
+                        <img src="{{ build.cpu.image_url }}" alt="{{ build.cpu.name }}" class="img-fluid" style="max-height: 100%;">
+                    </div>
+                    <h6 class="component-name fw-bold">{{ build.cpu.name }}</h6>
+
+                    <div class="specs-container">
+                        <p class="specs-text">
+                            Сокет: {{ build.cpu.socket }}<br>
+                            Benchmark: {{ build.cpu.benchmark_score }}
+                        </p>
+                    </div>
+
+                    <div class="bottom-section">
+                        <div class="h5 fw-bold" style="color: var(--accent-purple)">{{ build.cpu.price }} ₽</div>
+                        <div class="chart-container">
+                            {% if cpu_graph %}{{ cpu_graph|safe }}{% else %}<div class="p-2 text-center small text-muted">Нет данных</div>{% endif %}
+                        </div>
+                    </div>
+                </div>
+            </a>
+        </div>
+
+    <div class="col-md-6 col-lg-3">
+        <a href="{{ build.gpu.url }}" target="_blank" class="card-link">
+            <div class="component-card">
+                <span class="component-type-header">Видеокарта</span>
+                <div class="img-wrap mb-3">
+                    <img src="{{ build.gpu.image_url }}" alt="{{ build.gpu.name }}" class="img-fluid" style="max-height: 100%;">
+                </div>
+                <h6 class="component-name fw-bold">{{ build.gpu.name }}</h6>
+
+                <div class="specs-container">
+                    <p class="specs-text">
+                        Версия PCI-E: {{ build.gpu.pcie_version }}<br>
+                        Benchmark: {{ build.gpu.benchmark_score }}
+                    </p>
+                </div>
+
+                <div class="bottom-section">
+                    <div class="h5 fw-bold" style="color: var(--accent-purple)">{{ build.gpu.price }} ₽</div>
+                    <div class="chart-container">
+                        {% if gpu_graph %}{{ gpu_graph|safe }}{% else %}<div class="p-2 text-center small text-muted">Нет данных</div>{% endif %}
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+        <a href="{{ build.ram.url }}" target="_blank" class="card-link">
+            <div class="component-card">
+                <span class="component-type-header">Оперативная память</span>
+                <div class="img-wrap mb-3">
+                    <img src="{{ build.ram.image_url }}" alt="{{ build.ram.name }}" class="img-fluid" style="max-height: 100%;">
+                </div>
+                <h6 class="component-name fw-bold">{{ build.ram.name }}</h6>
+
+                <div class="specs-container">
+                    <p class="specs-text">
+                        Тип памяти: {{ build.ram.ram_type }}<br>
+                        Объём: {{ build.ram.ram_capacity }} ГБ
+                    </p>
+                </div>
+
+                <div class="bottom-section">
+                    <div class="h5 fw-bold" style="color: var(--accent-purple)">{{ build.ram.price }} ₽</div>
+                    <div class="chart-container">
+                        {% if ram_graph %}{{ ram_graph|safe }}{% else %}<div class="p-2 text-center small text-muted">Нет данных</div>{% endif %}
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+
+    <div class="col-md-6 col-lg-3">
+        <a href="{{ build.mb.url }}" target="_blank" class="card-link">
+            <div class="component-card">
+                <span class="component-type-header">Материнская плата</span>
+                <div class="img-wrap mb-3">
+                    <img src="{{ build.mb.image_url }}" alt="{{ build.mb.name }}" class="img-fluid" style="max-height: 100%;">
+                </div>
+                <h6 class="component-name fw-bold">{{ build.mb.name }}</h6>
+
+                <div class="specs-container">
+                    <p class="specs-text">
+                        Сокет: {{ build.mb.socket }}<br>
+                        Тип памяти: {{ build.mb.ram_type }}<br>
+                        PCI-E: {{ build.mb.pcie_version }}<br>
+                        Слотов памяти: {{ build.mb.ram_slots }}
+                    </p>
+                </div>
+
+                <div class="bottom-section">
+                    <div class="h5 fw-bold" style="color: var(--accent-purple)">{{ build.mb.price }} ₽</div>
+                    <div class="chart-container">
+                        {% if mb_graph %}{{ mb_graph|safe }}{% else %}<div class="p-2 text-center small text-muted">Нет данных</div>{% endif %}
+                    </div>
+                </div>
+            </div>
+        </a>
+    </div>
+</div>
+
+<div class="alert mt-5 border-secondary text-center" style="background: var(--card-bg)">
+    <h2 class="m-0 fw-bold">Итоговая стоимость: <span style="color: var(--accent-purple); font-weight: 600">{{ build.total_price }} ₽</span></h2>
+    <h3 class="m-0 fw-semibold">На остальные комплектующие: <span style="color: var(--accent-purple); font-weight: 600">{{ build.remaining }} ₽</span></h3>
+</div>
+{% endblock %}

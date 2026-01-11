@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="mb-5">
+    <h1 class="fw-bold">Личный кабинет</h1>
+</div>
+
+<h3 class="fw-bold mb-4">Ваши избранные сборки ({{ builds.count }})</h3>
+
+<div class="row g-4">
+    {% for build in builds %}
+    <div class="col-md-6 col-lg-4">
+        <div class="component-card">
+            <div class="d-flex justify-content-between align-items-start mb-3">
+                <span class="text-gray small">{{ build.created_at|date:"d.m.Y" }}</span>
+                <span class="h5 fw-bold text-purple">{{ build.total_price }} ₽</span>
+            </div>
+            <div class="small">
+                <p class="mb-1 text-white"><b>Процессор:</b> {{ build.cpu.name }}</p>
+                <p class="mb-1 text-white"><b>Видеокарта:</b> {{ build.gpu.name }}</p>
+                <p class="mb-1 text-white"><b>Оперативная память:</b> {{ build.ram.name }}</p>
+                <p class="mb-1 text-white"><b>Материнская плата:</b> {{ build.mb.name }}</p>
+            </div>
+            <hr class="border-secondary">
+            <div class="d-flex gap-2 mt-3">
+                <a href="{% url 'build_detail' build.id %}" class="btn btn-purple btn-sm flex-grow-1">Посмотреть детали</a>
+                <form action="{% url 'delete_build' build.pk %}" method="POST" class="flex-grow-1">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-hazard btn-sm w-100" onclick="return confirm('Удалить эту сборку?')">Удалить</button>
+                </form>
+            </div>
+
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12 text-center py-5">
+        <p class="text-gray">У вас пока нет сохраненных сборок</p>
+        <a href="{% url 'index' %}" class="btn btn-purple mt-2">Создать первую сборку</a>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
