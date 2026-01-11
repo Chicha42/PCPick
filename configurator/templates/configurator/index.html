@@ -1,113 +1,175 @@
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>PCPick - Тест подбора</title>
-</head>
-<body>
+{% extends 'base.html' %}
 
-    <h1>Подбор конфигурации ПК</h1>
-
-    <form method="POST">
-        {% csrf_token %}
-        <label>Ваш бюджет (руб):</label>
-        <input type="number" name="budget" value="{{ request.POST.budget }}" required>
-        <button type="submit">Собрать</button>
-    </form>
-
-    {% if error %}
-        <p class="error">{{ error }}</p>
-    {% endif %}
-
-    {% if build %}
-        <hr>
-        <div>
-            <h2>Результат сборки:</h2>
-            <p>Бюджет пользователя: <b>{{ total_budget }} руб.</b></p>
-            <p>Затрачено на 4 компонента: <b>{{ build.total_price }} руб.</b></p>
-            <p>Остаток на БП, Корпус и SSD: <b>{{ remaining }} руб.</b></p>
+{% block content %}
+<div class="text-center mb-5">
+    <h1 class="display-4 fw-bold">Собери свой <span style="color: var(--accent-purple)">PC</span></h1>
+    <div class="row justify-content-center mt-4">
+        <div class="col-md-6">
+            <form method="POST" class="d-flex gap-2">
+                {% csrf_token %}
+                <input type="number" name="budget" class="form-control big-input bg-dark text-white border-secondary" placeholder="Ваш бюджет..." required>
+                <button type="submit" class="btn btn-primary btn-purple" style="font-size: 1.2rem">Собрать</button>
+            </form>
         </div>
-        <hr>
-        <div>
-            <div>
-                <img src="{{ build.cpu.image_url }}" alt="CPU">
-                {% if cpu_chart %}
-                    <div>
-                        <p><b>Динамика цены:</b></p>
-                        <div style="width: 100%; max-width: 350px; border-radius: 8px; overflow: hidden; background: #121212; padding: 10px;">
-                            {{ cpu_chart|safe }}
-                        </div>
-                    </div>
-                {% else %}
-                    <p>Истории цен пока недостаточно для графика</p>
-                {% endif %}
-                <h3>Процессор</h3>
-                <p><b>{{ build.cpu.name }}</b></p>
-                <p>Сокет: {{ build.cpu.socket }}</p>
-                <p>Производительность: {{ build.cpu.benchmark_score }}</p>
-                <p>Цена: {{ build.cpu.price }} руб.</p>
-            </div>
-            <hr>
-            <div>
-                <img src="{{ build.gpu.image_url }}" alt="GPU">
-                {% if gpu_chart %}
-                    <div>
-                        <p><b>Динамика цены:</b></p>
-                        <div style="width: 100%; max-width: 350px; border-radius: 8px; overflow: hidden; background: #121212; padding: 10px;">
-                            {{ gpu_chart|safe }}
-                        </div>
-                    </div>
-                {% else %}
-                    <p>Истории цен пока недостаточно для графика</p>
-                {% endif %}
-                <h3>Видеокарта</h3>
-                <p><b>{{ build.gpu.name }}</b></p>
-                <p>PCI-E: {{ build.gpu.pcie_version }}</p>
-                <p>Производительность: {{ build.gpu.benchmark_score }}</p>
-                <p>Цена: {{ build.gpu.price }} руб.</p>
-            </div>
-            <hr>
-            <div>
-                <img src="{{ build.mb.image_url }}" alt="MB">
-                {% if mb_chart %}
-                    <div>
-                        <p><b>Динамика цены:</b></p>
-                        <div style="width: 100%; max-width: 350px; border-radius: 8px; overflow: hidden; background: #121212; padding: 10px;">
-                            {{ mb_chart|safe }}
-                        </div>
-                    </div>
-                {% else %}
-                    <p>Истории цен пока недостаточно для графика</p>
-                {% endif %}
-                <h3>Материнская плата</h3>
-                <p><b>{{ build.mb.name }}</b></p>
-                <p>Сокет: {{ build.mb.socket }}</p>
-                <p>Тип памяти: {{ build.mb.ram_type }}</p>
-                <p>Слотов RAM: {{ build.mb.ram_slots }}</p>
-                <p>Поддержка PCI-E: {{ build.mb.pcie_version }}</p>
-                <p>Цена: {{ build.mb.price }} руб.</p>
-            </div>
-            <hr>
-            <div>
-                <img src="{{ build.ram.image_url }}" alt="RAM">
-                {% if ram_chart %}
-                    <div>
-                        <p><b>Динамика цены:</b></p>
-                        <div style="width: 100%; max-width: 350px; border-radius: 8px; overflow: hidden; background: #121212; padding: 10px;">
-                            {{ ram_chart|safe }}
-                        </div>
-                    </div>
-                {% else %}
-                    <p>Истории цен пока недостаточно для графика</p>
-                {% endif %}
-                <h3>Оперативная память</h3>
-                <p><b>{{ build.ram.name }}</b></p>
-                <p>Тип: {{ build.ram.ram_type }}</p>
-                <p>Объем: {{ build.ram.ram_capacity }} ГБ</p>
-                <p>Плашек: {{ build.ram.ram_bar_count }} шт.</p>
-                <p>Цена: {{ build.ram.price }} руб.</p>
+    </div>
+</div>
+
+{% if build %}
+    <div class="row mb-4">
+        <div class="col-12 d-flex justify-content-between align-items-end">
+            <h2 class="fw-bold m-0">Результат подбора</h2>
+            <div class="text-end">
+                <div class="h3 fw-bold m-0">{{ build.total_price }} ₽</div>
+                <small style="color: #28a745;">На остальные комплектующие: {{ remaining }} ₽</small>
             </div>
         </div>
+    </div>
+
+    <div class="row g-4">
+        <div class="col-md-6 col-lg-3">
+            <a href="{{ build.cpu.url }}" target="_blank" class="card-link">
+                <div class="component-card shadow-sm">
+                    <span class="component-type-header">Процессор</span>
+
+                    <div class="img-wrap">
+                        <img src="{{ build.cpu.image_url }}" class="img-fluid" style="max-height: 100%;">
+                    </div>
+
+                    <div class="component-name">{{ build.cpu.name }}</div>
+
+                    <div class="specs-container">
+                        <div>
+                            Сокет: {{ build.cpu.socket }}<br>
+                            Benchmark: {{ build.cpu.benchmark_score }}
+                        </div>
+                    </div>
+
+                    <div class="price-text">{{ build.cpu.price }} ₽</div>
+
+                    <div class="chart-container">
+                        {% if cpu_graph %}
+                            {{ cpu_graph|safe }}
+                        {% else %}
+                            <div class="p-3 text-center small text-muted">Нет данных</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+            <a href="{{ build.gpu.url }}" target="_blank" class="card-link">
+                <div class="component-card shadow-sm">
+                    <span class="component-type-header">Видеокарта</span>
+
+                    <div class="img-wrap">
+                        <img src="{{ build.gpu.image_url }}" class="img-fluid" style="max-height: 100%;">
+                    </div>
+
+                    <div class="component-name">{{ build.gpu.name }}</div>
+
+                    <div class="specs-container">
+                        <div>
+                            Версия PCI-E: {{ build.gpu.pcie_version }}<br>
+                            Benchmark: {{ build.gpu.benchmark_score }}
+                        </div>
+                    </div>
+
+                    <div class="price-text">{{ build.gpu.price }} ₽</div>
+
+                    <div class="chart-container">
+                        {% if gpu_graph %}
+                            {{ gpu_graph|safe }}
+                        {% else %}
+                            <div class="p-3 text-center small text-muted">Нет данных</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+            <a href="{{ build.ram.url }}" target="_blank" class="card-link">
+                <div class="component-card shadow-sm">
+                    <span class="component-type-header">Оперативная память</span>
+
+                    <div class="img-wrap">
+                        <img src="{{ build.ram.image_url }}" class="img-fluid" style="max-height: 100%;">
+                    </div>
+
+                    <div class="component-name">{{ build.ram.name }}</div>
+
+                    <div class="specs-container">
+                        <div>
+                            Тип памяти: {{ build.ram.ram_type }}<br>
+                            Объём: {{ build.ram.ram_capacity }} ГБ
+                        </div>
+                    </div>
+
+                    <div class="price-text">{{ build.ram.price }} ₽</div>
+
+                    <div class="chart-container">
+                        {% if ram_graph %}
+                            {{ ram_graph|safe }}
+                        {% else %}
+                            <div class="p-3 text-center small text-muted">Нет данных</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </a>
+        </div>
+
+        <div class="col-md-6 col-lg-3">
+            <a href="{{ build.mb.url }}" target="_blank" class="card-link">
+                <div class="component-card shadow-sm">
+                    <span class="component-type-header">Материнская плата</span>
+
+                    <div class="img-wrap">
+                        <img src="{{ build.mb.image_url }}" class="img-fluid" style="max-height: 100%;">
+                    </div>
+
+                    <div class="component-name">{{ build.mb.name }}</div>
+
+                    <div class="specs-container">
+                        <div>
+                            Сокет: {{ build.mb.socket }}<br>
+                            Тип памяти: {{ build.mb.ram_type }}<br>
+                            PCI-E: {{ build.mb.pcie_version }}<br>
+                            Слотов памяти: {{ build.mb.ram_slots }}
+                        </div>
+                    </div>
+
+                    <div class="price-text">{{ build.mb.price }} ₽</div>
+
+                    <div class="chart-container">
+                        {% if mb_graph %}
+                            {{ mb_graph|safe }}
+                        {% else %}
+                            <div class="p-3 text-center small text-muted">Нет данных</div>
+                        {% endif %}
+                    </div>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <div class="text-center mt-5">
+        {% if user.is_authenticated %}
+            <form action="{% url 'save_build' %}" method="POST">
+                {% csrf_token %}
+                <input type="hidden" name="cpu_id" value="{{ build.cpu.id }}">
+                <input type="hidden" name="gpu_id" value="{{ build.gpu.id }}">
+                <input type="hidden" name="mb_id" value="{{ build.mb.id }}">
+                <input type="hidden" name="ram_id" value="{{ build.ram.id }}">
+                <input type="hidden" name="total_price" value="{{ build.total_price }}">
+
+                <button type="submit" class="btn btn-purple btn-lg px-5 mb-5 shadow">СОХРАНИТЬ В ИЗБРАННОЕ</button>
+            </form>
+        {% else %}
+            <div class="p-3 border border-secondary rounded bg-dark mb-5">
+                <p class="m-0">Хотите сохранить эту сборку? <a href="{% url 'login' %}" style="color: var(--accent-purple)">Войдите в аккаунт</a></p>
+            </div>
+        {% endif %}
+    </div>
     {% endif %}
-</body>
-</html>
+{% endblock %}
